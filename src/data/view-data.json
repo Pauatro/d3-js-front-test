@@ -1,0 +1,91 @@
+{
+    "status": 200,
+    "data": {
+        "dataType": "view",
+        "dataSeries": [
+            {
+                "name": "revenue",
+                "units": "€",
+                "total": 200000,
+                "timeLine": [
+                    100,
+                    110,
+                    105,
+                    120,
+                    118,
+                    140,
+                    135,
+                    140,
+                    135
+                ],
+                "grouped": [
+                    {
+                        "group": "tablet",
+                        "perc": 60,
+                        "total": 120000
+                    },
+                    {
+                        "group": "smartphone",
+                        "perc": 40,
+                        "total": 80000
+                    }
+                ]
+
+            },
+            {
+                "name": "impressions",
+                "units": null,
+                "total": 50000000,
+                "timeLine": [
+                    145,
+                    135,
+                    145,
+                    120,
+                    110,
+                    100
+                ],
+                "grouped": [
+                    {
+                        "group": "tablet",
+                        "perc": 40,
+                        "total": 20000000
+                    },
+                    {
+                        "group": "smartphone",
+                        "perc": 60,
+                        "total": 30000000
+                    }
+                ]
+
+            },
+            {
+                "name": "visits",
+                "units": "€",
+                "total": 600000000,
+                "timeLine": [
+                    100,
+                    110,
+                    105,
+                    120,
+                    118,
+                    140,
+                    135,
+                    140,
+                    135
+                ],
+                "grouped": [
+                    {
+                        "group": "tablet",
+                        "perc": 80,
+                        "total": 480000000
+                    },
+                    {
+                        "group": "smartphone",
+                        "perc": 20,
+                        "total": 120000000
+                    }
+                ]
+            }
+        ]
+    }
+}
