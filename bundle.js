@@ -1,4 +1,110 @@
 (() => {
+  // data/view-data.json
+  var data = {
+    dataType: "view",
+    dataSeries: [
+      {
+        name: "revenue",
+        units: "\u20AC",
+        total: 2e5,
+        timeLine: [
+          100,
+          110,
+          105,
+          120,
+          118,
+          140,
+          135,
+          140,
+          135
+        ],
+        grouped: [
+          {
+            group: "tablet",
+            perc: 60,
+            total: 12e4
+          },
+          {
+            group: "smartphone",
+            perc: 40,
+            total: 8e4
+          }
+        ]
+      },
+      {
+        name: "impressions",
+        units: null,
+        total: 5e7,
+        timeLine: [
+          145,
+          135,
+          145,
+          120,
+          110,
+          100
+        ],
+        grouped: [
+          {
+            group: "tablet",
+            perc: 40,
+            total: 2e7
+          },
+          {
+            group: "smartphone",
+            perc: 60,
+            total: 3e7
+          }
+        ]
+      },
+      {
+        name: "visits",
+        units: null,
+        total: 6e8,
+        timeLine: [
+          100,
+          110,
+          105,
+          120,
+          118,
+          140,
+          135,
+          140,
+          135,
+          100,
+          110,
+          105,
+          120,
+          118,
+          140,
+          135,
+          140,
+          135
+        ],
+        grouped: [
+          {
+            group: "tablet",
+            perc: 80,
+            total: 48e7
+          },
+          {
+            group: "smartphone",
+            perc: 20,
+            total: 12e7
+          }
+        ]
+      }
+    ]
+  };
+
+  // components/view-list.js
+  var view_list_default = (targetId) => {
+    const target = document.getElementById(targetId);
+    const viewList2 = document.createElement("div");
+    viewList2.className = "view-list";
+    target.append(viewList2);
+    return viewList2;
+  };
+
   // node_modules/d3-array/src/ascending.js
   function ascending(a, b) {
     return a == null || b == null ? NaN : a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
@@ -3033,8 +3139,8 @@
       return r[i2](d[i2](x2));
     };
   }
-  function copy(source, target2) {
-    return target2.domain(source.domain()).range(source.range()).interpolate(source.interpolate()).clamp(source.clamp()).unknown(source.unknown());
+  function copy(source, target) {
+    return target.domain(source.domain()).range(source.range()).interpolate(source.interpolate()).clamp(source.clamp()).unknown(source.unknown());
   }
   function transformer() {
     var domain = unit, range = unit, interpolate = value_default, transform2, untransform, unknown, clamp = identity2, piecewise, output, input;
@@ -3708,101 +3814,12 @@
     return node.__zoom;
   }
 
-  // data/view-data.json
-  var data = {
-    dataType: "view",
-    dataSeries: [
-      {
-        name: "revenue",
-        units: "\u20AC",
-        total: 2e5,
-        timeLine: [
-          100,
-          110,
-          105,
-          120,
-          118,
-          140,
-          135,
-          140,
-          135
-        ],
-        grouped: [
-          {
-            group: "tablet",
-            perc: 60,
-            total: 12e4
-          },
-          {
-            group: "smartphone",
-            perc: 40,
-            total: 8e4
-          }
-        ]
-      },
-      {
-        name: "impressions",
-        units: null,
-        total: 5e7,
-        timeLine: [
-          145,
-          135,
-          145,
-          120,
-          110,
-          100
-        ],
-        grouped: [
-          {
-            group: "tablet",
-            perc: 40,
-            total: 2e7
-          },
-          {
-            group: "smartphone",
-            perc: 60,
-            total: 3e7
-          }
-        ]
-      },
-      {
-        name: "visits",
-        units: null,
-        total: 6e8,
-        timeLine: [
-          100,
-          110,
-          105,
-          120,
-          118,
-          140,
-          135,
-          140,
-          135,
-          100,
-          110,
-          105,
-          120,
-          118,
-          140,
-          135,
-          140,
-          135
-        ],
-        grouped: [
-          {
-            group: "tablet",
-            perc: 80,
-            total: 48e7
-          },
-          {
-            group: "smartphone",
-            perc: 20,
-            total: 12e7
-          }
-        ]
-      }
-    ]
+  // components/view/components/view-container.js
+  var view_container_default = (targetElement, viewNumber) => {
+    const viewContainer = document.createElement("div");
+    viewContainer.className = "view-container";
+    targetElement.append(viewContainer);
+    return selectAll_default2(".view-container").nodes()[viewNumber];
   };
 
   // utils/colors.js
@@ -3816,34 +3833,10 @@
     ]
   };
 
-  // utils/formatting.js
-  var capitalizeFirstLetter = (string) => {
-    const firstCapitalLetter = string[0].toUpperCase();
-    const restOfTheString = string.slice(1);
-    return firstCapitalLetter + restOfTheString;
-  };
-  var formatNumber = (num) => num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
-
-  // index.js
-  var target = document.getElementById("target");
-  var viewList = document.createElement("div");
-  viewList.className = "view-list";
-  target.appendChild(viewList);
-  data.dataSeries.forEach((dataElement, i) => {
-    const { grouped: pieData, timeLine, name, total, units } = dataElement;
-    const viewContainer = document.createElement("div");
-    viewContainer.className = "view-container";
-    viewList.appendChild(viewContainer);
-    const d3Container = selectAll_default2(".view-container").nodes()[i];
-    const containerHeight = d3Container.offsetHeight;
-    const containerWidth = d3Container.offsetWidth;
-    const svgHeight = containerHeight;
-    const svgWidth = containerWidth;
-    const outerRadius = svgHeight / 3.5;
-    const innerRadius = outerRadius * 0.9;
-    const svg = select_default2(d3Container).append("svg").attr("viewBox", [-svgWidth / 2, -svgHeight / 2, svgWidth, svgHeight]);
-    const graphPath = timeLine.map((y2, i2, timeLine2) => {
-      const x2 = Math.round(innerRadius / timeLine2.length * (i2 + 1));
+  // components/view/components/line-chart.js
+  var line_chart_default = (svg, innerRadius, timeLine, colorPosition) => {
+    const graphPath = timeLine.map((y2, i, timeLine2) => {
+      const x2 = Math.round(innerRadius / timeLine2.length * (i + 1));
       return [x2, y2];
     });
     const [ymin, ymax] = extent(timeLine);
@@ -3852,16 +3845,30 @@
     const lineX = linear2().domain([0, innerRadius / 12]).range([-innerRadius / 11, innerRadius / 11]);
     const lineY = linear2().domain([ymin, ymax]).range([innerRadius / 7, -innerRadius / 7]);
     const line = area_default().x((d) => lineX(d[0])).y1((d) => lineY(d[1])).y0(lineY(yAreaBottom)).curve(monotoneX);
-    lineChart.append("path").attr("d", line(graphPath)).attr("stroke", colors_default.palettes[i][1]).attr("stroke-width", 1).attr("fill", colors_default.palettes[i][1]).attr("fill-opacity", 0.2);
+    return lineChart.append("path").attr("d", line(graphPath)).attr("stroke", colors_default.palettes[colorPosition][1]).attr("stroke-width", 1).attr("fill", colors_default.palettes[colorPosition][1]).attr("fill-opacity", 0.2);
+  };
+
+  // components/view/components/pie-chart.js
+  var pie_chart_default = (svg, innerRadius, outerRadius, containerHeight, grouped, colorPosition) => {
     const pie = pie_default().sort(null).value((d) => d.total);
     const marginsPie = pie_default().padAngle(0.025).value((d) => d);
     const pieChart = svg.append("g").attr("transform", "translate(" + 0 + "," + -containerHeight / 10 + ")");
-    pieChart.selectAll("arc").data(pie(pieData)).enter().append("path").attr("d", arc_default().innerRadius(innerRadius).outerRadius(outerRadius)).attr("fill", (d, y2) => colors_default.palettes[i][y2]);
-    pieChart.selectAll("arcinternalmargin").data(marginsPie([1])).enter().append("path").attr("d", arc_default().innerRadius(innerRadius - innerRadius / 28).outerRadius(innerRadius)).attr("fill", colors_default.lightGrey);
-    pieChart.selectAll("arcinternalmargin").data(marginsPie([1, 1, 1, 1])).enter().append("path").attr("d", arc_default().innerRadius(innerRadius - innerRadius / 15).outerRadius(innerRadius)).attr("fill", "white");
+    pieChart.selectAll("arc").data(pie(grouped)).enter().append("path").attr("d", arc_default().innerRadius(innerRadius).outerRadius(outerRadius)).attr("fill", (d, y2) => colors_default.palettes[colorPosition][y2]);
+    pieChart.selectAll("arcinternalgreymargin").data(marginsPie([1])).enter().append("path").attr("d", arc_default().innerRadius(innerRadius - innerRadius / 28).outerRadius(innerRadius)).attr("fill", colors_default.lightGrey);
+    pieChart.selectAll("arcinternalwhitemargin").data(marginsPie([1, 1, 1, 1])).enter().append("path").attr("d", arc_default().innerRadius(innerRadius - innerRadius / 15).outerRadius(innerRadius)).attr("fill", "white");
     pieChart.selectAll("arcexternalmargin").data(marginsPie([1])).enter().append("path").attr("d", arc_default().innerRadius(outerRadius).outerRadius(outerRadius + innerRadius)).attr("fill", "white");
-    const centralTitle = svg.append("g").append("text").append("tspan").attr("class", "central-title").text(name.toUpperCase()).attr("dominant-baseline", "middle").attr("dy", -innerRadius / 1.4).attr("font-size", innerRadius / 5).attr("stroke-width", 0.5).attr("fill", colors_default.lightGrey).attr("stroke", colors_default.lightGrey);
-    const centralData = svg.append("g").append("text").attr("width", innerRadius * 2).attr("height", innerRadius * 2).append("tspan").text(formatNumber(total) + (units ? units : "")).attr("stroke", colors_default.darkGrey).attr("fill", colors_default.darkGrey).attr("font-family", "Arial").attr("text-anchor", "middle").attr("dominant-baseline", "middle").attr("font-size", innerRadius / 3.2).attr("dy", -innerRadius / 2.75);
+  };
+
+  // utils/formatting.js
+  var capitalizeFirstLetter = (string) => {
+    const firstCapitalLetter = string[0].toUpperCase();
+    const restOfTheString = string.slice(1);
+    return firstCapitalLetter + restOfTheString;
+  };
+  var formatNumber = (num) => num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+
+  // components/view/components/table.js
+  var table_default = (svg, containerWidth, containerHeight, innerRadius, outerRadius, grouped, units, colorPosition) => {
     const bottomTable = svg.append("svg:foreignObject").attr("width", containerWidth).attr("height", containerHeight / 4).attr("transform", `translate(${-containerWidth / 2}, ${outerRadius / 1.5})`).append("xhtml:div").attr("class", "table-container").attr("style", `
             width: ${containerWidth}px;
             height: ${containerHeight / 4}px;
@@ -3871,27 +3878,67 @@
         `).append("table").attr("style", `
             width: ${containerWidth * 0.75}px;
         `);
-    const tableHeader = bottomTable.append("thead").attr("class", "table-header");
-    const columnWidth = 100 / pieData.length + "%";
-    tableHeader.append("tr").selectAll("th").data(pieData).enter().append("th").text((d) => capitalizeFirstLetter(d.group)).attr("style", (d, y2) => `
+    const columnWidth = 100 / grouped.length + "%";
+    bottomTable.append("thead").attr("class", "table-header").append("tr").selectAll("th").data(grouped).enter().append("th").text((d) => capitalizeFirstLetter(d.group)).attr("style", (d, y2) => `
             width: ${columnWidth};
-            text-align: ${y2 !== pieData.length - 1 ? "left" : "right"};
-            color: ${colors_default.palettes[i][y2]};
+            text-align: ${y2 !== grouped.length - 1 ? "left" : "right"};
+            color: ${colors_default.palettes[colorPosition][y2]};
             font-size: ${innerRadius / 6}px;
         `);
-    const tableBody = bottomTable.append("tbody").append("tr");
-    tableBody.selectAll("tr").data(pieData).enter().append("td").attr("class", "table-body").attr("align", (d, y2) => y2 !== pieData.length - 1 ? "left" : "right").attr("style", (d, y2) => `
+    bottomTable.append("tbody").append("tr").selectAll("tr").data(grouped).enter().append("td").attr("class", "table-body").attr("align", (d, y2) => y2 !== grouped.length - 1 ? "left" : "right").attr("style", `
             width: ${columnWidth};
             padding-top: 0px;
             padding-bottom: 0px;
             margin: 0px;
             border-spacing: 0px;
-        `).append("td").attr("class", "table-body-left").text((d) => d.perc + "%").attr("align", (d, i2) => i2 !== pieData.length - 1 ? "left" : "right").attr("style", (d, y2) => ` 
+        `).append("td").attr("class", "table-body-left").text((d) => d.perc + "%").attr("align", (d, i) => i !== grouped.length - 1 ? "left" : "right").attr("style", ` 
             font-size: ${innerRadius / 6}px; 
             padding-right: 10px;
-        `).clone().attr("class", "table-body-right").text((d) => formatNumber(d.total) + (units ? units : "")).attr("style", (d, y2) => ` 
+        `).clone().attr("class", "table-body-right").text((d) => formatNumber(d.total) + (units ? units : "")).attr("style", ` 
             font-size: ${innerRadius / 6}px; 
             color: ${colors_default.lightGrey};        
         `);
-  });
+  };
+
+  // components/view/components/central-elements.js
+  var createCentralTitle = (svg, name, innerRadius) => {
+    svg.append("g").append("text").append("tspan").attr("class", "central-title").text(name.toUpperCase()).attr("dominant-baseline", "middle").attr("dy", -innerRadius / 1.4).attr("style", `
+            font-size: ${innerRadius / 5}px;
+            stroke-width: 0.5px;
+            fill: ${colors_default.lightGrey};
+            stroke: ${colors_default.lightGrey};
+            text-anchor: middle;
+            font-weight: lighter;
+            letter-spacing: 1px;
+        `);
+  };
+  var createCentralData = (svg, innerRadius, total, units) => {
+    svg.append("g").append("text").attr("width", innerRadius * 2).attr("height", innerRadius * 2).append("tspan").text(formatNumber(total) + (units ? units : "")).attr("stroke", colors_default.darkGrey).attr("fill", colors_default.darkGrey).attr("font-family", "Arial").attr("text-anchor", "middle").attr("dominant-baseline", "middle").attr("font-size", innerRadius / 3.2).attr("dy", -innerRadius / 2.75);
+  };
+
+  // components/view/view.js
+  var view_default = (dataElement, i, viewList2) => {
+    const {
+      grouped,
+      timeLine,
+      name,
+      total,
+      units
+    } = dataElement;
+    const viewContainer = view_container_default(viewList2, i);
+    const containerHeight = viewContainer.offsetHeight;
+    const containerWidth = viewContainer.offsetWidth;
+    const outerRadius = containerHeight / 3.5;
+    const innerRadius = outerRadius * 0.9;
+    const svg = select_default2(viewContainer).append("svg").attr("viewBox", [-containerWidth / 2, -containerHeight / 2, containerWidth, containerHeight]);
+    line_chart_default(svg, innerRadius, timeLine, i);
+    pie_chart_default(svg, innerRadius, outerRadius, containerHeight, grouped, i);
+    createCentralTitle(svg, name, innerRadius);
+    createCentralData(svg, innerRadius, total, units);
+    table_default(svg, containerWidth, containerHeight, innerRadius, outerRadius, grouped, units, i);
+  };
+
+  // index.js
+  var viewList = view_list_default("target");
+  data.dataSeries.forEach((dataElement, i) => view_default(dataElement, i, viewList));
 })();
