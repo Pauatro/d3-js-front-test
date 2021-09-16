@@ -20,11 +20,6 @@ body{
     height: 100%; 
 }
 
-.view-list:hover{
-    overflow-x: scroll;
-    overflow-y: hidden;
-}
-
 .view-container{
     min-width: 33%;
     max-width: 100%;
@@ -37,11 +32,4 @@ body{
     text-anchor: middle;
     font-weight: lighter;
     letter-spacing: 1px;
-}
-
-.table-container{
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
