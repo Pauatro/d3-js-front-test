@@ -26,8 +26,22 @@ body{
 }
 
 .view-container{
-    min-width: 66%;
+    min-width: 33%;
     max-width: 100%;
     min-height: 150px;
     max-height: 100%; 
+    font-family: Arial;
+}
+
+.central-title{
+    text-anchor: middle;
+    font-weight: lighter;
+    letter-spacing: 1px;
+}
+
+.table-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

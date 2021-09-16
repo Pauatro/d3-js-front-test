@@ -98,51 +98,6 @@
     return [min2, max2];
   }
 
-  // node_modules/internmap/src/index.js
-  var InternMap = class extends Map {
-    constructor(entries, key = keyof) {
-      super();
-      Object.defineProperties(this, { _intern: { value: new Map() }, _key: { value: key } });
-      if (entries != null)
-        for (const [key2, value] of entries)
-          this.set(key2, value);
-    }
-    get(key) {
-      return super.get(intern_get(this, key));
-    }
-    has(key) {
-      return super.has(intern_get(this, key));
-    }
-    set(key, value) {
-      return super.set(intern_set(this, key), value);
-    }
-    delete(key) {
-      return super.delete(intern_delete(this, key));
-    }
-  };
-  function intern_get({ _intern, _key }, value) {
-    const key = _key(value);
-    return _intern.has(key) ? _intern.get(key) : value;
-  }
-  function intern_set({ _intern, _key }, value) {
-    const key = _key(value);
-    if (_intern.has(key))
-      return _intern.get(key);
-    _intern.set(key, value);
-    return value;
-  }
-  function intern_delete({ _intern, _key }, value) {
-    const key = _key(value);
-    if (_intern.has(key)) {
-      value = _intern.get(value);
-      _intern.delete(key);
-    }
-    return value;
-  }
-  function keyof(value) {
-    return value !== null && typeof value === "object" ? value.valueOf() : value;
-  }
-
   // node_modules/d3-array/src/ticks.js
   var e10 = Math.sqrt(50);
   var e5 = Math.sqrt(10);
@@ -1514,10 +1469,10 @@
     return rgb2;
   }(1);
   function rgbSpline(spline) {
-    return function(colors) {
-      var n = colors.length, r = new Array(n), g = new Array(n), b = new Array(n), i, color2;
+    return function(colors2) {
+      var n = colors2.length, r = new Array(n), g = new Array(n), b = new Array(n), i, color2;
       for (i = 0; i < n; ++i) {
-        color2 = rgb(colors[i]);
+        color2 = rgb(colors2[i]);
         r[i] = color2.r || 0;
         g[i] = color2.g || 0;
         b[i] = color2.b || 0;
@@ -3023,43 +2978,6 @@
     return this;
   }
 
-  // node_modules/d3-scale/src/ordinal.js
-  var implicit = Symbol("implicit");
-  function ordinal() {
-    var index = new InternMap(), domain = [], range = [], unknown = implicit;
-    function scale(d) {
-      let i = index.get(d);
-      if (i === void 0) {
-        if (unknown !== implicit)
-          return unknown;
-        index.set(d, i = domain.push(d) - 1);
-      }
-      return range[i % range.length];
-    }
-    scale.domain = function(_) {
-      if (!arguments.length)
-        return domain.slice();
-      domain = [], index = new InternMap();
-      for (const value of _) {
-        if (index.has(value))
-          continue;
-        index.set(value, domain.push(value) - 1);
-      }
-      return scale;
-    };
-    scale.range = function(_) {
-      return arguments.length ? (range = Array.from(_), scale) : range.slice();
-    };
-    scale.unknown = function(_) {
-      return arguments.length ? (unknown = _, scale) : unknown;
-    };
-    scale.copy = function() {
-      return ordinal(domain, range).unknown(unknown);
-    };
-    initRange.apply(scale, arguments);
-    return scale;
-  }
-
   // node_modules/d3-scale/src/constant.js
   function constants(x2) {
     return function() {
@@ -3892,44 +3810,76 @@
   var viewList = document.createElement("div");
   viewList.className = "view-list";
   target.appendChild(viewList);
+  var colors = {
+    lightGrey: "#b3b3b3",
+    darkGrey: "#302c2c",
+    palettes: [
+      ["#3a6815", "#93d55d"],
+      ["#305264", "#73c8e7"],
+      ["#bb5919", "#edc435"]
+    ]
+  };
+  var capitalizeFirstLetter = (string) => {
+    const firstCapitalLetter = string[0].toUpperCase();
+    const restOfTheString = string.slice(1);
+    return firstCapitalLetter + restOfTheString;
+  };
+  function formatNumber(num) {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+  }
   data.dataSeries.forEach((dataElement, i) => {
     const { grouped: pieData, timeLine, name, total, units } = dataElement;
     const viewContainer = document.createElement("div");
     viewContainer.className = "view-container";
     viewList.appendChild(viewContainer);
-    let d3Container;
-    d3Container = selectAll_default2(".view-container").nodes()[i];
-    const height = d3Container.offsetHeight;
-    const width = d3Container.offsetWidth;
-    const outerRadius = height * 0.36;
-    const innerRadius = height * 0.334;
-    const svg = select_default2(d3Container).append("svg").attr("viewBox", [-width / 2, -height / 2, width, height]);
+    const d3Container = selectAll_default2(".view-container").nodes()[i];
+    const containerHeight = d3Container.offsetHeight;
+    const containerWidth = d3Container.offsetWidth;
+    const svgHeight = containerHeight * 0.75;
+    const svgWidth = containerWidth;
+    const outerRadius = svgHeight / 2;
+    const innerRadius = outerRadius * 0.9;
+    const svg = select_default2(d3Container).append("svg").attr("viewBox", [-svgWidth / 2, -svgHeight / 2, svgWidth, svgHeight]);
     const graphPath = timeLine.map((y2, i2, timeLine2) => {
       const x2 = Math.round(innerRadius / timeLine2.length * (i2 + 1));
       return [x2, y2];
     });
     const [ymin, ymax] = extent(timeLine);
     const yAreaBottom = ymin - (ymax - ymin) * 1.5;
-    const lineChart = svg.append("g").attr("transform", "translate(" + -innerRadius * 1.2 + "," + innerRadius / 10 + ")");
+    const lineChart = svg.append("g").attr("transform", "translate(" + -innerRadius * 1.2 + "," + innerRadius / 2 + ")");
     const lineX = linear2().domain([0, innerRadius / 12]).range([-innerRadius / 11, innerRadius / 11]);
     const lineY = linear2().domain([ymin, ymax]).range([innerRadius / 7, -innerRadius / 7]);
     const line = area_default().x((d) => lineX(d[0])).y1((d) => lineY(d[1])).y0(lineY(yAreaBottom)).curve(monotoneX);
-    lineChart.append("path").attr("d", line(graphPath)).attr("stroke", "black").attr("stroke-width", 0.5).attr("fill", "black");
+    lineChart.append("path").attr("d", line(graphPath)).attr("stroke", colors.palettes[i][1]).attr("stroke-width", 1).attr("fill", colors.palettes[i][1]).attr("fill-opacity", 0.2);
     const pie = pie_default().sort(null).value((d) => d.total);
-    const pieChart = svg.append("g").attr("transform", "translate(" + 0 + "," + -height / 10 + ")");
-    var color2 = ordinal().domain(pieData).range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"]);
-    pieChart.selectAll("arc").data(pie(pieData)).enter().append("path").attr("d", arc_default().innerRadius(innerRadius).outerRadius(outerRadius)).attr("fill", function(d) {
-      return color2(d.data.key);
-    });
-    pieChart.selectAll("arcinternalmargin").data(pie([{ total: 1 }])).enter().append("path").attr("d", arc_default().innerRadius(innerRadius - innerRadius / 15).outerRadius(innerRadius)).attr("fill", "white");
-    pieChart.selectAll("arcexternalmargin").data(pie([{ total: 1 }])).enter().append("path").attr("d", arc_default().innerRadius(outerRadius).outerRadius(outerRadius + innerRadius)).attr("fill", "white");
-    const centralTitle = svg.append("g").append("text").attr("width", innerRadius * 2).attr("height", innerRadius * 2).append("tspan").text(name.toUpperCase()).attr("stroke", "grey").attr("fill", "grey").attr("font-family", "Arial").attr("text-anchor", "middle").attr("dominant-baseline", "middle").attr("dy", -innerRadius / 1.6).attr("font-size", innerRadius / 5);
-    const centralData = svg.append("g").append("text").attr("width", innerRadius * 2).attr("height", innerRadius * 2).append("tspan").text(total + units).attr("stroke", "black").attr("font-family", "Arial").attr("text-anchor", "middle").attr("dominant-baseline", "middle").attr("dy", -innerRadius / 3).attr("font-size", innerRadius / 3);
-    const bottomTable = svg.append("foreignObject").attr("transform", "translate(" + -innerRadius * 1.75 + "," + innerRadius * 0.9 + ")").attr("width", width * 0.75).attr("height", height / 5).append("xhtml:table").attr("width", width * 0.75).attr("height", height / 5);
-    const tableHead = bottomTable.append("thead");
-    const tableBody = bottomTable.append("tbody").append("tr");
+    const marginsPie = pie_default().padAngle(0.025).value((d) => d);
+    const pieChart = svg.append("g");
+    pieChart.selectAll("arc").data(pie(pieData)).enter().append("path").attr("d", arc_default().innerRadius(innerRadius).outerRadius(outerRadius)).attr("fill", (d, y2) => colors.palettes[i][y2]);
+    pieChart.selectAll("arcinternalmargin").data(marginsPie([1])).enter().append("path").attr("d", arc_default().innerRadius(innerRadius - innerRadius / 28).outerRadius(innerRadius)).attr("fill", colors.lightGrey);
+    pieChart.selectAll("arcinternalmargin").data(marginsPie([1, 1, 1, 1])).enter().append("path").attr("d", arc_default().innerRadius(innerRadius - innerRadius / 15).outerRadius(innerRadius)).attr("fill", "white");
+    pieChart.selectAll("arcexternalmargin").data(marginsPie([1])).enter().append("path").attr("d", arc_default().innerRadius(outerRadius).outerRadius(outerRadius + innerRadius)).attr("fill", "white");
+    const centralTitle = svg.append("g").append("text").append("tspan").attr("class", "central-title").text(name.toUpperCase()).attr("dominant-baseline", "middle").attr("dy", -innerRadius / 3).attr("font-size", innerRadius / 5).attr("stroke-width", 0.5).attr("fill", colors.lightGrey).attr("stroke", colors.lightGrey);
+    const centralData = svg.append("g").append("text").attr("width", innerRadius * 2).attr("height", innerRadius * 2).append("tspan").text(formatNumber(total) + (units ? units : "")).attr("stroke", colors.darkGrey).attr("fill", colors.darkGrey).attr("font-family", "Arial").attr("text-anchor", "middle").attr("dominant-baseline", "middle").attr("font-size", innerRadius / 3.2);
+    const bottomTable = select_default2(d3Container).append("div").attr("class", "table-container").append("table").attr("width", containerWidth * 0.75).attr("height", containerHeight / 4);
+    const tableHeader = bottomTable.append("thead").attr("class", "table-header");
     const columnWidth = 100 / pieData.length + "%";
-    tableHead.append("tr").selectAll("th").data(pieData).enter().append("th").attr("width", columnWidth).text((d) => d.group).attr("align", (d, i2) => i2 !== pieData.length - 1 ? "left" : "right").attr("font-size", innerRadius / 3).attr("text-size-adjust", "none");
-    tableBody.selectAll("tr").data(pieData).enter().append("td").attr("width", columnWidth).attr("align", (d, i2) => i2 !== pieData.length - 1 ? "left" : "right").append("td").text((d) => d.perc + "%").attr("align", (d, i2) => i2 !== pieData.length - 1 ? "left" : "right").clone().text((d) => d.total + units);
+    tableHeader.append("tr").selectAll("th").data(pieData).enter().append("th").text((d) => capitalizeFirstLetter(d.group)).attr("style", (d, y2) => `
+            width: ${columnWidth};
+            text-align: ${y2 !== pieData.length - 1 ? "left" : "right"};
+            color: ${colors.palettes[i][y2]};
+            font-size: ${innerRadius / 8}px;
+        `);
+    const tableBody = bottomTable.append("tbody").append("tr");
+    tableBody.selectAll("tr").data(pieData).enter().append("td").attr("class", "table-body").attr("align", (d, y2) => y2 !== pieData.length - 1 ? "left" : "right").attr("style", (d, y2) => `
+            width: ${columnWidth};
+            padding: 0px;
+            border-spacing: 0px;
+        `).append("td").attr("class", "table-body-left").text((d) => d.perc + "%").attr("align", (d, i2) => i2 !== pieData.length - 1 ? "left" : "right").attr("style", (d, y2) => ` 
+            font-size: ${innerRadius / 8}px; 
+            padding-right: 10px;
+        `).clone().attr("class", "table-body-right").text((d) => formatNumber(d.total) + (units ? units : "")).attr("style", (d, y2) => ` 
+            font-size: ${innerRadius / 8}px; 
+            color: ${colors.lightGrey};        
+        `);
   });
 })();

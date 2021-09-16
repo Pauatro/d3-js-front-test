@@ -9,6 +9,25 @@ const viewList = document.createElement('div')
 viewList.className = 'view-list'
 target.appendChild(viewList)
 
+const colors = {
+    lightGrey: '#b3b3b3',
+    darkGrey: '#302c2c',
+    palettes: [
+    ['#3a6815', '#93d55d'],
+    ['#305264','#73c8e7'],
+    ['#bb5919', '#edc435']
+]}
+
+const capitalizeFirstLetter = (string)=>{
+    const firstCapitalLetter = string[0].toUpperCase()
+    const restOfTheString = string.slice(1)
+    return firstCapitalLetter + restOfTheString
+}
+
+function formatNumber(num) {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+}
+
 data.dataSeries.forEach((dataElement, i)=>{
     const { grouped: pieData, timeLine, name, total, units } = dataElement
 
@@ -17,19 +36,21 @@ data.dataSeries.forEach((dataElement, i)=>{
     viewContainer.className = 'view-container'
     viewList.appendChild(viewContainer)
 
-    let d3Container
-
     //View
-    d3Container = d3.selectAll(".view-container").nodes()[i]
+    const d3Container = d3.selectAll(".view-container").nodes()[i]
 
-    const height = d3Container.offsetHeight;
-    const width = d3Container.offsetWidth;
-    const outerRadius = height*0.36
-    const innerRadius = height*0.334
-
+    const containerHeight = d3Container.offsetHeight;
+    const containerWidth = d3Container.offsetWidth;
+    
     //Svg
+    
+    const svgHeight = containerHeight*0.75
+    const svgWidth = containerWidth
+    const outerRadius = svgHeight/2
+    const innerRadius = outerRadius*0.9
+
     const svg = d3.select(d3Container).append("svg")
-        .attr("viewBox", [-width / 2, -height / 2, width, height])
+        .attr("viewBox", [-svgWidth / 2, -svgHeight / 2, svgWidth, svgHeight])
 
 
     //LineData
@@ -44,7 +65,7 @@ data.dataSeries.forEach((dataElement, i)=>{
     //Line
     const lineChart = svg
         .append("g")
-        .attr("transform", "translate(" + -innerRadius*1.2 + "," + innerRadius/10 + ")");
+        .attr("transform", "translate(" + -innerRadius*1.2 + "," + innerRadius/2 + ")");
 
     const lineX = d3.scaleLinear()
         .domain([0, innerRadius/12])
@@ -63,38 +84,50 @@ data.dataSeries.forEach((dataElement, i)=>{
     lineChart
         .append("path")
         .attr("d", line(graphPath))
-        .attr("stroke", "black")
-        .attr("stroke-width", 0.5)
-        .attr("fill", "black")
+        .attr("stroke", colors.palettes[i][1])
+        .attr("stroke-width", 1)
+        .attr("fill", colors.palettes[i][1])
+        .attr('fill-opacity', 0.2)
 
     //Pie
 
     const pie = d3.pie()
         .sort(null)
         .value(d => d.total)
+    
+    const marginsPie = d3.pie()
+            .padAngle(.025)
+            .value(d => d)
 
     const pieChart = svg
         .append("g")
-        .attr("transform", "translate(" + 0 + "," + -height / 10 + ")");
-    
-    var color = d3.scaleOrdinal()
-        .domain(pieData)
-        .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"])
+        // .attr("transform", "translate(" + 0 + "," + -containerHeight / 10 + ")");
 
     pieChart
         .selectAll('arc')
         .data(pie(pieData))
-        .enter()
+        .enter()    
         .append('path') 
         .attr('d', d3.arc()
             .innerRadius(innerRadius)       
             .outerRadius(outerRadius)
         )
-        .attr('fill', function(d){ return(color(d.data.key)) })
+        .attr('fill', (d,y)=>colors.palettes[i][y])
 
     pieChart
         .selectAll('arcinternalmargin')
-        .data(pie([{total: 1}]))
+        .data(marginsPie([1]))
+        .enter()
+        .append('path') 
+        .attr('d', d3.arc()
+            .innerRadius(innerRadius-innerRadius/28)       
+            .outerRadius(innerRadius)
+        )
+        .attr('fill', colors.lightGrey)
+    
+    pieChart
+        .selectAll('arcinternalmargin')
+        .data(marginsPie([1,1,1,1]))
         .enter()
         .append('path') 
         .attr('d', d3.arc()
@@ -102,10 +135,10 @@ data.dataSeries.forEach((dataElement, i)=>{
             .outerRadius(innerRadius)
         )
         .attr('fill', 'white')
-    
+
     pieChart
         .selectAll('arcexternalmargin')
-        .data(pie([{total: 1}]))
+        .data(marginsPie([1]))
         .enter()
         .append('path') 
         .attr('d', d3.arc()
@@ -120,17 +153,16 @@ data.dataSeries.forEach((dataElement, i)=>{
     const centralTitle = svg
         .append('g')
         .append('text')
-        .attr('width', innerRadius*2)
-        .attr('height', innerRadius*2)
         .append('tspan')
+        .attr('class', 'central-title')
         .text(name.toUpperCase())
-        .attr("stroke", 'grey')
-        .attr("fill", 'grey')
-        .attr("font-family", 'Arial')
-        .attr("text-anchor", 'middle')
         .attr("dominant-baseline", 'middle')
-        .attr('dy', -innerRadius/1.6)
+        .attr('dy', -innerRadius/3)
         .attr('font-size', innerRadius/5)
+        .attr('stroke-width', 0.5)
+        .attr('fill', colors.lightGrey)
+        .attr('stroke', colors.lightGrey)
+        
 
     //Central Data
     const centralData = svg
@@ -139,52 +171,68 @@ data.dataSeries.forEach((dataElement, i)=>{
         .attr('width', innerRadius*2)
         .attr('height', innerRadius*2)
         .append('tspan')
-        .text(total + units)
-        .attr("stroke", 'black')
+        .text(formatNumber(total) + (units?units:''))
+        .attr("stroke", colors.darkGrey)
+        .attr("fill", colors.darkGrey)
         .attr("font-family", 'Arial')
         .attr("text-anchor", 'middle')
         .attr("dominant-baseline", 'middle')
-        .attr('dy', -innerRadius/3)
-        .attr('font-size', innerRadius/3)
+        .attr('font-size', innerRadius/3.2)
 
     // Bottom Table
 
-    const bottomTable = svg
-        .append("foreignObject")
-        .attr("transform", "translate(" + -innerRadius*1.75 + "," + innerRadius*0.9 + ")")
-        .attr('width', width*0.75)
-        .attr('height', height/5)
-        .append('xhtml:table')
-        .attr('width', width*0.75)
-        .attr('height', height/5)
-    
-    const tableHead = bottomTable.append('thead')
-    const tableBody = bottomTable.append('tbody').append("tr")
-    
+    const bottomTable = d3.select(d3Container).append("div")
+        .attr('class', 'table-container')
+        .append('table')
+        .attr('width', containerWidth*0.75)
+        .attr('height', containerHeight/4)
+        
+    const tableHeader = bottomTable
+        .append('thead')
+        .attr('class', 'table-header')
+
     const columnWidth = 100/pieData.length + '%'
+        
+    tableHeader.append("tr")
+        .selectAll("th")
+        .data(pieData)
+        .enter()
+        .append("th")
+        .text(d=>capitalizeFirstLetter(d.group))
+        .attr('style', (d,y)=>`
+            width: ${columnWidth};
+            text-align: ${y!==pieData.length-1?'left':'right'};
+            color: ${colors.palettes[i][y]};
+            font-size: ${innerRadius/8}px;
+        `)
     
-    tableHead.append("tr")
-    .selectAll("th")
-    .data(pieData)
-    .enter()
-    .append("th")
-    .attr('width', columnWidth)
-    .text(d=>d.group)
-    .attr('align', (d,i)=>i!==pieData.length-1?'left':'right')
-    .attr('font-size', innerRadius/3)
-    .attr('text-size-adjust', 'none')
+    const tableBody = bottomTable.append('tbody').append("tr")
 
     tableBody
         .selectAll("tr")
         .data(pieData)
         .enter()
         .append("td")
-        .attr('width', columnWidth)
-        .attr('align', (d,i)=>i!==pieData.length-1?'left':'right')
+        .attr('class', 'table-body')
+        .attr('align', (d,y)=>y!==pieData.length-1?'left':'right')
+        .attr('style', (d,y)=>`
+            width: ${columnWidth};
+            padding: 0px;
+            border-spacing: 0px;
+        `)
         .append("td")
+        .attr('class', 'table-body-left')
         .text(d=>d.perc + '%')
         .attr('align', (d,i)=>i!==pieData.length-1?'left':'right')
+        .attr('style', (d,y)=>` 
+            font-size: ${innerRadius/8}px; 
+            padding-right: 10px;
+        `)
         .clone()
-        .text(d=>d.total + units);
-    
+        .attr('class', 'table-body-right')
+        .text(d=>formatNumber(d.total) + (units?units:''))
+        .attr('style', (d,y)=>` 
+            font-size: ${innerRadius/8}px; 
+            color: ${colors.lightGrey};        
+        `)
 })
