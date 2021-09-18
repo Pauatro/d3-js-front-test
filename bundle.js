@@ -1575,10 +1575,10 @@
     return rgb2;
   }(1);
   function rgbSpline(spline) {
-    return function(colors2) {
-      var n = colors2.length, r = new Array(n), g = new Array(n), b = new Array(n), i, color2;
+    return function(colors) {
+      var n = colors.length, r = new Array(n), g = new Array(n), b = new Array(n), i, color2;
       for (i = 0; i < n; ++i) {
-        color2 = rgb(colors2[i]);
+        color2 = rgb(colors[i]);
         r[i] = color2.r || 0;
         g[i] = color2.g || 0;
         b[i] = color2.b || 0;
@@ -3815,11 +3815,11 @@
   }
 
   // components/view/components/view-container.js
-  var view_container_default = (targetElement, viewNumber) => {
+  var view_container_default = (targetElement, viewId) => {
     const viewContainer = document.createElement("div");
     viewContainer.className = "view-container";
     targetElement.append(viewContainer);
-    const d3Container = selectAll_default2(".view-container").nodes()[viewNumber];
+    const d3Container = selectAll_default2(".view-container").nodes()[viewId];
     const containerHeight = d3Container.offsetHeight;
     const containerWidth = d3Container.offsetWidth;
     const svg = select_default2(d3Container).append("svg").attr("viewBox", [-containerWidth / 2, -containerHeight / 2, containerWidth, containerHeight]);
@@ -3831,7 +3831,7 @@
   };
 
   // utils/colors.js
-  var colors_default = colors = {
+  var colors_default = {
     lightGrey: "#b3b3b3",
     darkGrey: "#302c2c",
     palettes: [
