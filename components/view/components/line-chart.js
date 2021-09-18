@@ -33,7 +33,7 @@ export default (svg, innerRadius, timeLine, colorPosition) => {
         .append("path")
         .attr("d", line(graphPath))
         .attr('style', `
-            stroke: ${colors.palettes[colorPosition][1]}
+            stroke: ${colors.palettes[colorPosition][1]};
             stroke-width: 1px;
             fill: ${colors.palettes[colorPosition][1]};
             fill-opacity: 0.2;

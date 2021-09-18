@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+Selection {
+  "_groups": Array [
+    Array [
+      <svg
+        viewBox="0,0,0,0"
+      >
+        <g>
+          <text>
+            <tspan
+              class="central-title"
+              dy="0"
+              style="
+            font-size: 0px;
+            stroke-width: 0.5px;
+            fill: #b3b3b3;
+            stroke: #b3b3b3;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            font-weight: lighter;
+            letter-spacing: 1px;
+        "
+            >
+              NAME
+            </tspan>
+          </text>
+        </g>
+      </svg>,
+    ],
+  ],
+  "_parents": Array [
+    null,
+  ],
+}
+`;
+
+exports[`renders correctly 2`] = `
+Selection {
+  "_groups": Array [
+    Array [
+      <svg
+        viewBox="0,0,0,0"
+      >
+        <g>
+          <text>
+            <tspan
+              class="central-title"
+              dy="0"
+              style="
+            font-size: 0px;
+            stroke-width: 0.5px;
+            fill: #b3b3b3;
+            stroke: #b3b3b3;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            font-weight: lighter;
+            letter-spacing: 1px;
+        "
+            >
+              NAME
+            </tspan>
+          </text>
+        </g>
+        <g>
+          <text
+            height="0"
+            width="0"
+          >
+            <tspan
+              dy="0"
+              style="
+            font-size: 0px;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            stroke-width: 0.7px;
+            fill: #302c2c;
+            stroke: #302c2c;
+        "
+            >
+              10.000€
+            </tspan>
+          </text>
+        </g>
+      </svg>,
+    ],
+  ],
+  "_parents": Array [
+    null,
+  ],
+}
+`;

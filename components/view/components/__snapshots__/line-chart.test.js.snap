@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+Selection {
+  "_groups": Array [
+    Array [
+      <svg
+        viewBox="0,0,0,0"
+      >
+        <g
+          transform="translate(0,2)"
+        >
+          <path
+            d="M0,0L0,0Z"
+            style="
+            stroke: #93d55d;
+            stroke-width: 1px;
+            fill: #93d55d;
+            fill-opacity: 0.2;
+        "
+          />
+        </g>
+      </svg>,
+    ],
+  ],
+  "_parents": Array [
+    null,
+  ],
+}
+`;
