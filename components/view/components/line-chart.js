@@ -32,8 +32,10 @@ export default (svg, innerRadius, timeLine, colorPosition) => {
     return lineChart
         .append("path")
         .attr("d", line(graphPath))
-        .attr("stroke", colors.palettes[colorPosition][1])
-        .attr("stroke-width", 1)
-        .attr("fill", colors.palettes[colorPosition][1])
-        .attr('fill-opacity', 0.2)
+        .attr('style', `
+            stroke: ${colors.palettes[colorPosition][1]}
+            stroke-width: 1px;
+            fill: ${colors.palettes[colorPosition][1]};
+            fill-opacity: 0.2;
+        `)
 }

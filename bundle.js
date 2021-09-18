@@ -3845,7 +3845,12 @@
     const lineX = linear2().domain([0, innerRadius / 12]).range([-innerRadius / 11, innerRadius / 11]);
     const lineY = linear2().domain([ymin, ymax]).range([innerRadius / 7, -innerRadius / 7]);
     const line = area_default().x((d) => lineX(d[0])).y1((d) => lineY(d[1])).y0(lineY(yAreaBottom)).curve(monotoneX);
-    return lineChart.append("path").attr("d", line(graphPath)).attr("stroke", colors_default.palettes[colorPosition][1]).attr("stroke-width", 1).attr("fill", colors_default.palettes[colorPosition][1]).attr("fill-opacity", 0.2);
+    return lineChart.append("path").attr("d", line(graphPath)).attr("style", `
+            stroke: ${colors_default.palettes[colorPosition][1]}
+            stroke-width: 1px;
+            fill: ${colors_default.palettes[colorPosition][1]};
+            fill-opacity: 0.2;
+        `);
   };
 
   // components/view/components/pie-chart.js
@@ -3902,18 +3907,26 @@
 
   // components/view/components/central-elements.js
   var createCentralTitle = (svg, name, innerRadius) => {
-    svg.append("g").append("text").append("tspan").attr("class", "central-title").text(name.toUpperCase()).attr("dominant-baseline", "middle").attr("dy", -innerRadius / 1.4).attr("style", `
+    svg.append("g").append("text").append("tspan").attr("class", "central-title").text(name.toUpperCase()).attr("dy", -innerRadius / 1.4).attr("style", `
             font-size: ${innerRadius / 5}px;
             stroke-width: 0.5px;
             fill: ${colors_default.lightGrey};
             stroke: ${colors_default.lightGrey};
             text-anchor: middle;
+            dominant-baseline: middle;
             font-weight: lighter;
             letter-spacing: 1px;
         `);
   };
   var createCentralData = (svg, innerRadius, total, units) => {
-    svg.append("g").append("text").attr("width", innerRadius * 2).attr("height", innerRadius * 2).append("tspan").text(formatNumber(total) + (units ? units : "")).attr("stroke", colors_default.darkGrey).attr("fill", colors_default.darkGrey).attr("font-family", "Arial").attr("text-anchor", "middle").attr("dominant-baseline", "middle").attr("font-size", innerRadius / 3.2).attr("dy", -innerRadius / 2.75);
+    svg.append("g").append("text").attr("width", innerRadius * 2).attr("height", innerRadius * 2).append("tspan").text(formatNumber(total) + (units ? units : "")).attr("dy", -innerRadius / 2.75).attr("style", `
+            font-size: ${innerRadius / 3.2}px;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            stroke-width: 0.7px;
+            fill: ${colors_default.darkGrey};
+            stroke: ${colors_default.darkGrey};
+        `);
   };
 
   // components/view/view.js
