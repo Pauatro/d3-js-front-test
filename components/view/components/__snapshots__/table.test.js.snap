@@ -1,0 +1,134 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+Selection {
+  "_groups": Array [
+    Array [
+      <svg
+        viewBox="0,0,0,0"
+      >
+        <foreignobject
+          height="0"
+          transform="translate(0, 0)"
+          width="0"
+        >
+          <div
+            class="table-container"
+            style="
+            width: 0px;
+            height: 0px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        "
+          >
+            <table
+              style="
+            width: 0px;
+        "
+            >
+              <thead
+                class="table-header"
+              >
+                <tr>
+                  <th
+                    style="
+            width: 50%;
+            text-align: left;
+            color: #3a6815;
+            font-size: 0px;
+        "
+                  >
+                    Tablet
+                  </th>
+                  <th
+                    style="
+            width: 50%;
+            text-align: right;
+            color: #93d55d;
+            font-size: 0px;
+        "
+                  >
+                    Smartphone
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td
+                    align="left"
+                    class="table-body"
+                    style="
+            width: 50%;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            margin: 0px;
+            border-spacing: 0px;
+        "
+                  >
+                    <td
+                      align="left"
+                      class="table-body-left"
+                      style=" 
+            font-size: 0px; 
+            padding-right: 10px;
+        "
+                    >
+                      60%
+                    </td>
+                    <td
+                      align="left"
+                      class="table-body-right"
+                      style=" 
+            font-size: 0px; 
+            color: #b3b3b3;        
+        "
+                    >
+                      120.000€
+                    </td>
+                  </td>
+                  <td
+                    align="right"
+                    class="table-body"
+                    style="
+            width: 50%;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            margin: 0px;
+            border-spacing: 0px;
+        "
+                  >
+                    <td
+                      align="right"
+                      class="table-body-left"
+                      style=" 
+            font-size: 0px; 
+            padding-right: 10px;
+        "
+                    >
+                      40%
+                    </td>
+                    <td
+                      align="right"
+                      class="table-body-right"
+                      style=" 
+            font-size: 0px; 
+            color: #b3b3b3;        
+        "
+                    >
+                      80.000€
+                    </td>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </foreignobject>
+      </svg>,
+    ],
+  ],
+  "_parents": Array [
+    null,
+  ],
+}
+`;

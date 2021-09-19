@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  style="width: 300px; height: 200px;"
+>
+  <div
+    class="view-container"
+  >
+    <svg
+      viewBox="0,0,0,0"
+    />
+  </div>
+</div>
+`;
