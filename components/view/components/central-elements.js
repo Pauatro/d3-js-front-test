@@ -10,7 +10,6 @@ export const createCentralTitle = (svg, name, innerRadius)=>{
         .append('tspan')
         .attr('class', 'central-title')
         .text(name.toUpperCase())
-        .attr("dominant-baseline", 'middle')
         .attr('dy', -innerRadius/1.4)
         .attr('style', `
             font-size: ${innerRadius/5}px;
@@ -18,6 +17,7 @@ export const createCentralTitle = (svg, name, innerRadius)=>{
             fill: ${colors.lightGrey};
             stroke: ${colors.lightGrey};
             text-anchor: middle;
+            dominant-baseline: middle;
             font-weight: lighter;
             letter-spacing: 1px;
         `)
@@ -31,11 +31,13 @@ export const createCentralData = (svg, innerRadius, total, units)=>{
         .attr('height', innerRadius*2)
         .append('tspan')
         .text(formatNumber(total) + (units?units:''))
-        .attr("stroke", colors.darkGrey)
-        .attr("fill", colors.darkGrey)
-        .attr("font-family", 'Arial')
-        .attr("text-anchor", 'middle')
-        .attr("dominant-baseline", 'middle')
-        .attr('font-size', innerRadius/3.2)
-        .attr("dy", -innerRadius / 2.75);
+        .attr("dy", -innerRadius / 2.75)
+        .attr('style', `
+            font-size: ${innerRadius/3.2}px;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            stroke-width: 0.7px;
+            fill: ${colors.darkGrey};
+            stroke: ${colors.darkGrey};
+        `)
 }
