@@ -1,4 +1,4 @@
-This is a test using d3 and raw js for the generation of combined charts.
+This is a test using d3 and raw js to create combined reusable charts.
 
 #Getting Started
 
